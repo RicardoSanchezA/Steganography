@@ -41,6 +41,7 @@ class ImageHelper {
             File f = new File(path);
             img = ImageIO.read(f);
         }catch(IOException e) {
+        	System.out.println("path: " + path);
             System.out.println(e);
         }
         return img;
@@ -61,12 +62,17 @@ public class Steganography {
     private final static String null_char = "11111111";
     private final static char null_char_value = (char) Integer.parseInt(null_char, 2);
     private static String image_path = "";
+    private static int first_run = 0;
 
     /* Methods */
     private static BufferedImage get_image(Scanner sc) {
         BufferedImage img = null;
         String path = "";
         while(img == null) {
+        	if(first_run < 1) {
+        		System.out.println("(You can enter an empty line to use the default image)");
+        		first_run += 1;
+        	}
             System.out.print("Enter path to the image you want to use: ");
             String input = sc.nextLine();
             if(input.length() > 0) {
@@ -92,7 +98,7 @@ public class Steganography {
     }
     
     private static void read_message(Scanner sc) {
-        image_path = cwd + "\\images\\default(hidden message).png";
+        image_path = cwd + "/images/default(hidden message).png";
         BufferedImage img = get_image(sc);
         boolean contains_hidden_message = true;
 
@@ -127,7 +133,7 @@ public class Steganography {
 
     }
     private static void hide_message(Scanner sc) {
-        image_path = cwd + "\\images\\default.png";
+        image_path = cwd + "/images/default.png";
         BufferedImage img = get_image(sc);
 
         String message;
