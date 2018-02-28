@@ -30,7 +30,7 @@ class ImageHelper {
             File f = new File(path);
             ImageIO.write(img, "png", f);
         } catch(IOException e) {
-            System.out.println(e);
+            System.out.println(" >> The path provided doesn't lead to a valid file.");
             return false;
         }
         return true;
@@ -41,8 +41,7 @@ class ImageHelper {
             File f = new File(path);
             img = ImageIO.read(f);
         }catch(IOException e) {
-        	System.out.println("path: " + path);
-            System.out.println(e);
+            System.out.println(" >> The path provided doesn't lead to a valid file.");
         }
         return img;
     }
@@ -51,7 +50,7 @@ class ImageHelper {
         Graphics2D _imgG = _img.createGraphics();
         _imgG.drawImage(img, 0, 0, null);
         save_image(_img, path);
-        System.out.println("Image converted to support aRGB (transparency).");
+        System.out.println(" >> Image converted to support aRGB (transparency).");
         return open_image(path);
     }
 }
@@ -68,16 +67,16 @@ public class Steganography {
     private static BufferedImage get_image(Scanner sc) {
         BufferedImage img = null;
         String path = "";
+        if(first_run < 2) {
+    		System.out.println("(You can enter an empty line to use the default image)");
+    		first_run += 1;
+        }
         while(img == null) {
-        	if(first_run < 1) {
-        		System.out.println("(You can enter an empty line to use the default image)");
-        		first_run += 1;
-        	}
             System.out.print("Enter path to the image you want to use: ");
             String input = sc.nextLine();
             if(input.length() > 0) {
                 if(!input.contains(".png")) {
-                    System.out.println("The path must lead to a PNG image!");
+                    System.out.println(" >> The path must lead to a PNG image!");
                     continue;
                 }
                 path = input;
@@ -125,7 +124,8 @@ public class Steganography {
         }
 
         if(contains_hidden_message) {
-            System.out.println("Hidden Message: " + hidden_message.toString() + "\n");
+        	System.out.println("\nImage used: " + image_path);
+            System.out.println("Message Found: \"" + hidden_message.toString() + "\"\n");
         }
         else {
             System.out.println("This image doesn't contain any hidden message using our algorithm.\n");
@@ -177,13 +177,14 @@ public class Steganography {
         /* Print Success/Failure messages */
         if(success) {
             if(wrote_full_message) {
-                System.out.println("Message successfully hidden in the image!\n");
+                System.out.println("\nMessage successfully hidden!");
             }
             else {
-                System.out.println("Unfortunately, the image used doesn't have enough pixels to fit"
+                System.out.println("\nUnfortunately, the image used doesn't have enough pixels to fit"
                     + " all of your message, but we were able to hide the following part: \"" 
-                    + message.substring(0, i) + "\".\n");
+                    + message.substring(0, i) + "\".");
             }
+            System.out.println("Image location: " + image_path + "\n");
         }
         else {
             System.out.println("Something went wrong...\n");
